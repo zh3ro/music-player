@@ -73,3 +73,21 @@ button:focus-visible {
 input[type="range"] {
   width: 100%;
 }
+
+.upload {
+  margin-top: 20px;
+}
+
+.upload input[type="text"] {
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.upload input[type="file"] {
+  margin-bottom: 10px;
+}
+
+.upload button {
+  padding: 10px 20px;
+  cursor: pointer;
+}

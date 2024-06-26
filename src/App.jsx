@@ -1,8 +1,9 @@
-import React, { useState, useRef, useEffect } from 'react';
-import Visualizer from '././component/visualizer';
+import React, { useState, useRef } from 'react';
+import Visualizer from './component/visualizer';
+import Upload from './component/Upload';
 import './App.css';
 
-const tracks = [
+const initialTracks = [
   { title: 'Song 1', src: '/path/to/song1.mp3' },
   { title: 'Song 2', src: '/path/to/song2.mp3' },
   { title: 'Song 3', src: '/path/to/song3.mp3' },
@@ -10,29 +11,20 @@ const tracks = [
 
 const App = () => {
   const [isPlaying, setIsPlaying] = useState(false);
+  const [tracks, setTracks] = useState(initialTracks);
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
   const [volume, setVolume] = useState(1.0);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const audioRef = useRef(null);
 
-  useEffect(() => {
-    const audio = audioRef.current;
-    const setAudioData = () => {
-      setDuration(audio.duration);
-    };
-    const setAudioTime = () => {
-      setCurrentTime(audio.currentTime);
-    };
-    
-    audio.addEventListener('loadeddata', setAudioData);
-    audio.addEventListener('timeupdate', setAudioTime);
-    
-    return () => {
-      audio.removeEventListener('loadeddata', setAudioData);
-      audio.removeEventListener('timeupdate', setAudioTime);
-    };
-  }, []);
+  const handleUpload = (albumTitle, uploadedTracks) => {
+    const newTracks = uploadedTracks.map(track => ({
+      ...track,
+      title: `${albumTitle} - ${track.title}`
+    }));
+    setTracks(prevTracks => [...prevTracks, ...newTracks]);
+  };
 
   const togglePlay = () => {
     if (isPlaying) {
@@ -97,6 +89,7 @@ const App = () => {
           onChange={(e) => (audioRef.current.currentTime = e.target.value)}
         />
       </div>
+      <Upload onUpload={handleUpload} />
       <Visualizer />
     </div>
   );
